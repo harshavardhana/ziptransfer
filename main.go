@@ -141,7 +141,6 @@ func main() {
 			KeepAlive: 30 * time.Second,
 		}).DialContext,
 		MaxIdleConnsPerHost:   1024,
-		ResponseHeaderTimeout: time.Minute,
 		IdleConnTimeout:       time.Minute,
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 10 * time.Second,
