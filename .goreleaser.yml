@@ -1,0 +1,118 @@
+# Copyright 2023 Harshavardhana
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# This is an example goreleaser.yaml file with some sane defaults.
+# Make sure to check the documentation at http://goreleaser.com
+project_name: ziptransfer
+
+before:
+  hooks:
+    - go mod tidy -compat=1.19
+builds:
+  -
+    flags:
+      - -trimpath
+    goos:
+      - darwin
+      - linux
+      - freebsd
+    goarch:
+      - amd64
+      - arm64
+      - ppc64le
+      - s390x
+    env:
+      - CGO_ENABLED=0
+archives:
+  -
+    format_overrides:
+      - goos: windows
+        format: zip
+    files:
+      - README.md
+      - LICENSE
+      - CREDITS
+
+checksum:
+  name_template: 'checksums.txt'
+snapshot:
+  name_template: 'snapshot-{{ time "2006-01-02" }}'
+changelog:
+  sort: asc
+  filters:
+    exclude:
+      - '^docs:'
+      - '^test:'
+nfpms:
+  -
+    description: Serve static files from any S3 bucket
+    license: Apache License Version 2.0
+    formats:
+      - deb
+      - rpm
+dockers:
+- image_templates:
+  - "y4m4/ziptransfer:{{ .Tag }}-amd64"
+  use: buildx
+  dockerfile: Dockerfile
+  extra_files:
+    - LICENSE
+    - CREDITS
+  build_flag_templates:
+  - "--platform=linux/amd64"
+  - "--build-arg=TAG={{ .Tag }}"
+- image_templates:
+  - "y4m4/ziptransfer:{{ .Tag }}-ppc64le"
+  use: buildx
+  dockerfile: Dockerfile
+  extra_files:
+    - LICENSE
+    - CREDITS
+  build_flag_templates:
+  - "--platform=linux/ppc64le"
+  - "--build-arg=TAG={{ .Tag }}"
+- image_templates:
+  - "y4m4/ziptransfer:{{ .Tag }}-s390x"
+  use: buildx
+  dockerfile: Dockerfile
+  extra_files:
+    - LICENSE
+    - CREDITS
+  build_flag_templates:
+  - "--platform=linux/s390x"
+  - "--build-arg=TAG={{ .Tag }}"
+- image_templates:
+  - "y4m4/ziptransfer:{{ .Tag }}-arm64"
+  use: buildx
+  dockerfile: Dockerfile
+  extra_files:
+    - LICENSE
+    - CREDITS
+  build_flag_templates:
+  - "--platform=linux/arm64"
+  - "--build-arg=TAG={{ .Tag }}"
+
+docker_manifests:
+- name_template: y4m4/ziptransfer:{{ .Tag }}
+  image_templates:
+  - y4m4/ziptransfer:{{ .Tag }}-amd64
+  - y4m4/ziptransfer:{{ .Tag }}-arm64
+  - y4m4/ziptransfer:{{ .Tag }}-ppc64le
+  - y4m4/ziptransfer:{{ .Tag }}-s390x
+- name_template: y4m4/ziptransfer:latest
+  image_templates:
+  - y4m4/ziptransfer:{{ .Tag }}-amd64
+  - y4m4/ziptransfer:{{ .Tag }}-arm64
+  - y4m4/ziptransfer:{{ .Tag }}-ppc64le
+  - y4m4/ziptransfer:{{ .Tag }}-s390x
