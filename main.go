@@ -77,6 +77,7 @@ func writeAsZip(srcClnt, destClnt *minio.Client, srcBucket, destBucket string, w
 		Opts:     minio.PutObjectOptions{},
 		InMemory: os.Getenv("INMEMORY") == "true",
 		Compress: os.Getenv("COMPRESS") == "true",
+		SkipErrs: os.Getenv("SKIPERRS") == "true",
 	}
 
 	t := time.Now()
