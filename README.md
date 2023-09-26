@@ -1,8 +1,8 @@
 # ziptransfer
 
-A fast and safe way to transfer large number of small files from a bucket to another bucket on MinIO.
+A fast and safe way to transfer a large number of small files from one bucket to another bucket on MinIO.
 
-## usage
+## Usage
 ```
 export SRC_ACCESS_KEY=minioadmin
 export SRC_SECRET_KEY=minioadmin
@@ -19,9 +19,9 @@ export SRC_SERVER=source-host:port
 ./ziptransfer
 ```
 
-This would start transferring data from source bucket to destination bucket
+This would start transferring data from the source bucket to the destination bucket
 
-### tls
+### TLS
 ```
 export DEST_SECURE="true"
 ```
@@ -29,17 +29,19 @@ export DEST_SECURE="true"
 export SRC_SECURE="true"
 ```
 
-In-case if you have a TLS source and destination. TLS trust is not needed this tool automatically trusts all sites.
+In case you have a TLS source and destination. TLS trust is not needed this tool automatically trusts all sites.
 
-### internals
+### Internals
 
 - The concurrency of downloads to create a zip archive is controlled via GOMAXPROCS=N (n is any positive integer, defaults to the number of CPUs on the node this tool runs on)
-- Each zip archive is upto 100 entries (this value is not configurable however if you want I can allow configuring) but for now it defaults to 100 per zip archive
+- Each zip archive is up to 100 entries (this value is not configurable however if you want I can allow configuring) but for now, it defaults to 100 per zip archive
 - You can also set `COMPRESS=true` to create a compressed archive (by default the archive uploaded to MinIO is not compressed)
+- By default, the archive is created in memory and streamed from memory directly, if you have large objects then consider enabling the `INMEMORY=false` environment
+  variable to persist on a local disk before upload uses `/tmp`. Make the choice according to how beefy is your node where this tool runs.
 
-## benchmarks
+## Benchmarks
 
-Total time taken with new zip transfer of 24643 objects all small files
+Total time is taken with new zip transfer of 24643 objects all small files
 ```
 export SRC_ACCESS_KEY=minioadmin
 export SRC_SECRET_KEY=minioadmin
