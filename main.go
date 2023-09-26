@@ -99,7 +99,7 @@ func writeAsZip(srcClnt, destClnt *minio.Client, srcBucket, destBucket string, w
 				r, err := srcClnt.GetObject(context.Background(), srcBucket,
 					entry.Key, minio.GetObjectOptions{})
 				if err != nil {
-					fmt.Println("ERROR: ", err)
+					fmt.Println("ERROR: ", err, entry.Key)
 					return
 				}
 
