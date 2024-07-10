@@ -6,6 +6,7 @@ A fast and safe way to transfer a large number of small files from one bucket to
 ```
 export SRC_ACCESS_KEY=minioadmin
 export SRC_SECRET_KEY=minioadmin
+export SRC_PREFIX=prefix
 
 export DEST_ACCESS_KEY=minioadmin
 export DEST_SECRET_KEY=minioadmin
